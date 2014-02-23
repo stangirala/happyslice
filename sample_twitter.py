@@ -14,6 +14,10 @@ def cleanText(text):
 
     check_string = 'abcdefghijklmnopqrstuvwxyz'
 
+    tweet = {}
+
+    tweet['base_sentiment'] = sentiment.baseSentiment(text)
+
     tokens = text.split()
     clean_tokens = []
     for token in tokens:
@@ -28,9 +32,9 @@ def cleanText(text):
         if check == True:
             clean_tokens.append(token)
 
-    print ' '.join(i for i in clean_tokens)
+    tweet['text'] = ' '.join(i for i in clean_tokens)
 
-    return clean_tokens
+    return tweet
 
 class SampleStreamListener(StreamListener):
 
@@ -42,20 +46,20 @@ class SampleStreamListener(StreamListener):
             tweet = json.loads(data)
             if 'text' in tweet and tweet['lang'] == 'en':
                 text = tweet['text']
-                clean_tokens = cleanText(text)
-                if len(clean_tokens) > 0:
+                clean_tweet = cleanText(text)
+                if len(clean_tweet['text']) > 0:
                     print 'Getting Tweet #'+str(self.count+1)
                     sample = open('twitter_sample.txt', 'a')
-                    sample.write(json.dumps(tweet)+'\n')
+                    sample.write(json.dumps(clean_tweet)+'\n')
                     self.count += 1
                     sample.close()
         else:
-            exit(0)
+            return False
 
         return True
 
     def on_error(self, status):
-        print "*******ERROR******", status
+        print "*******TWEEPY ERROR******", status
         exit(0)
 
 def sampleTwitter(keywords):
@@ -79,4 +83,6 @@ def sampleTwitter(keywords):
         stream.sample()
     else:
         stream.filter(None, [i.strip() for i in keywords.split()])
+
+    print 'DONE READING SAMPLE TWITTER'
 
