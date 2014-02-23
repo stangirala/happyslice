@@ -39,10 +39,11 @@ def cleanText(text):
 class SampleStreamListener(StreamListener):
 
     count = 0
+    max_count = 200
 
     def on_data(self, data):
 
-        if self.count < 100:
+        if self.count < self.max_count:
             tweet = json.loads(data)
             if 'text' in tweet and tweet['lang'] == 'en':
                 text = tweet['text']
