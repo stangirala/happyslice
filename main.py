@@ -1,7 +1,7 @@
 import ConfigParser
 import json
 from collections import namedtuple
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 import sample_twitter
 import parser
@@ -42,9 +42,10 @@ def readSentimentFile():
 
     return word_dict
 
-def main(keywords):
+def main(keywords, words_dict=None):
 
-    words_dict = readSentimentFile()
+    if words_dict is None:
+        words_dict = readSentimentFile()
 
     ''' Sample twitter. Uses a conf file. '''
     sample_twitter.sampleTwitter(keywords)
@@ -78,10 +79,14 @@ def main(keywords):
 
     sample.close()
 
+    ''' Plot distribution. '''
+    return vals
+
+
 if __name__ == '__main__':
 
-    main(raw_input('Keywords to track (Enter to random sample tweets): '))
+    data = main(raw_input('Keywords to track (Enter to random sample tweets): '))
 
-    ''' Plot Distribution. '''
-    #plt.hist(vals)
-    #plt.show()
+    ''' Plot distribution. '''
+    plt.hist(data)
+    plt.show()
