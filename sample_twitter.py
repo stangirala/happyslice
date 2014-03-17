@@ -66,31 +66,13 @@ class SampleStreamListener(StreamListener):
 
 def sampleTwitter(keywords):
 
-    api_environ = True
-    api_file = True
-
-    api_tokens = ['consumer_key', 'consumer_secret', 'token_key', 'token_secret']
-    for api_token in api_tokens:
-        if api_token not in os.environ:
-            api_environ = False
-            break
-
-    if api_environ:
-        con_key = os.environ['consumer_key']
-        con_secret = os.environ['consumer_secret']
-        token_key = os.environ['token_key']
-        token_secret = os.environ['token_secret']
-    elif api_file:
-        config = ConfigParser.ConfigParser()
-        config.read('conf/config.file')
-        section = 'Twitter'
-        con_key = config.get(section, 'consumer_key')
-        con_secret = config.get(section, 'consumer_secret')
-        token_key = config.get(section, 'token_key')
-        token_secret = config.get(section, 'token_secret')
-    else:
-        print "Unable to find api tokens"
-        exit(-1)
+    config = ConfigParser.ConfigParser()
+    config.read('conf/config.file')
+    section = 'Twitter'
+    con_key = config.get(section, 'consumer_key')
+    con_secret = config.get(section, 'consumer_secret')
+    token_key = config.get(section, 'token_key')
+    token_secret = config.get(section, 'token_secret')
 
     listener = SampleStreamListener()
     auth = OAuthHandler(con_key, con_secret)
